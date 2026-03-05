@@ -1,0 +1,81 @@
+Problem: Find Intersection Point of Two Linked Lists - Implement using linked list with dynamic memory allocation.
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* createList(int n) {
+    struct Node *head = NULL, *temp = NULL, *newNode;
+    int x;
+
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &x);
+        newNode = (struct Node*)malloc(sizeof(struct Node));
+        newNode->data = x;
+        newNode->next = NULL;
+
+        if (head == NULL) {
+            head = newNode;
+            temp = newNode;
+        } else {
+            temp->next = newNode;
+            temp = newNode;
+        }
+    }
+    return head;
+}
+
+int length(struct Node* head) {
+    int count = 0;
+    while (head) {
+        count++;
+        head = head->next;
+    }
+    return count;
+}
+
+struct Node* intersection(struct Node* head1, struct Node* head2) {
+    int l1 = length(head1);
+    int l2 = length(head2);
+    int diff;
+
+    struct Node *p1 = head1, *p2 = head2;
+
+    if (l1 > l2) {
+        diff = l1 - l2;
+        while (diff--) p1 = p1->next;
+    } else {
+        diff = l2 - l1;
+        while (diff--) p2 = p2->next;
+    }
+
+    while (p1 && p2) {
+        if (p1 == p2)
+            return p1;
+        p1 = p1->next;
+        p2 = p2->next;
+    }
+
+    return NULL;
+}
+
+int main() {
+    int n, m;
+    scanf("%d", &n);
+    struct Node* head1 = createList(n);
+
+    scanf("%d", &m);
+    struct Node* head2 = createList(m);
+
+    struct Node* inter = intersection(head1, head2);
+
+    if (inter)
+        printf("%d", inter->data);
+    else
+        printf("No Intersection");
+
+    return 0;
+}
