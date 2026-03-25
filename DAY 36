@@ -1,0 +1,80 @@
+Problem: Circular Queue Using Array - Implement using linked list with dynamic memory allocation.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Queue {
+    struct Node *front, *rear;
+};
+
+void initQueue(struct Queue* q) {
+    q->front = q->rear = NULL;
+}
+
+void enqueue(struct Queue* q, int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+
+    if (q->rear == NULL) {
+        newNode->next = newNode;
+        q->front = q->rear = newNode;
+        return;
+    }
+
+    newNode->next = q->front;
+    q->rear->next = newNode;
+    q->rear = newNode;
+}
+
+void dequeue(struct Queue* q) {
+    if (q->front == NULL)
+        return;
+
+    if (q->front == q->rear) {
+        free(q->front);
+        q->front = q->rear = NULL;
+        return;
+    }
+
+    struct Node* temp = q->front;
+    q->front = q->front->next;
+    q->rear->next = q->front;
+    free(temp);
+}
+
+void display(struct Queue* q) {
+    if (q->front == NULL)
+        return;
+
+    struct Node* temp = q->front;
+    do {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    } while (temp != q->front);
+}
+
+int main() {
+    int n, m, x;
+    struct Queue q;
+    initQueue(&q);
+
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &x);
+        enqueue(&q, x);
+    }
+
+    scanf("%d", &m);
+    for (int i = 0; i < m; i++) {
+        dequeue(&q);
+    }
+
+    display(&q);
+
+    return 0;
+}
