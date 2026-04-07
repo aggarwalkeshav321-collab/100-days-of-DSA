@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void bfs(int n, int** adj, int* size, int s) {
+    int* visited = (int*)calloc(n, sizeof(int));
+    int* queue = (int*)malloc(n * sizeof(int));
+    int front = 0, rear = 0;
+
+    queue[rear++] = s;
+    visited[s] = 1;
+
+    while(front < rear) {
+        int node = queue[front++];
+        printf("%d ", node);
+
+        for(int i = 0; i < size[node]; i++) {
+            int neigh = adj[node][i];
+            if(!visited[neigh]) {
+                visited[neigh] = 1;
+                queue[rear++] = neigh;
+            }
+        }
+    }
+}
+
+int main() {
+    int n;
+    scanf("%d", &n);
+
+    int** adj = (int**)malloc(n * sizeof(int*));
+    int* size = (int*)calloc(n, sizeof(int));
+
+    for(int i = 0; i < n; i++) {
+        int k;
+        scanf("%d", &k);
+        adj[i] = (int*)malloc(k * sizeof(int));
+        size[i] = k;
+        for(int j = 0; j < k; j++) {
+            scanf("%d", &adj[i][j]);
+        }
+    }
+
+    int s;
+    scanf("%d", &s);
+
+    bfs(n, adj, size, s);
+
+    return 0;
+}
