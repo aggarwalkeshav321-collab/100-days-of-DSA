@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define EMPTY -1
+#define DELETED -2
+
+int hash(int key, int m) {
+    return key % m;
+}
+
+int main() {
+    int m, q;
+    scanf("%d", &m);
+    scanf("%d", &q);
+
+    int* table = (int*)malloc(m * sizeof(int));
+    for (int i = 0; i < m; i++) table[i] = EMPTY;
+
+    while (q--) {
+        char op[10];
+        int key;
+        scanf("%s %d", op, &key);
+
+        if (strcmp(op, "INSERT") == 0) {
+            for (int i = 0; i < m; i++) {
+                int idx = (hash(key, m) + i * i) % m;
+                if (table[idx] == EMPTY || table[idx] == DELETED) {
+                    table[idx] = key;
+                    break;
+                }
+            }
+        } else if (strcmp(op, "SEARCH") == 0) {
+            int found = 0;
+            for (int i = 0; i < m; i++) {
+                int idx = (hash(key, m) + i * i) % m;
+                if (table[idx] == EMPTY) break;
+                if (table[idx] == key) {
+                    found = 1;
+                    break;
+                }
+            }
+            if (found) printf("FOUND\n");
+            else printf("NOT FOUND\n");
+        }
+    }
+
+    return 0;
+}
